@@ -168,7 +168,7 @@ public class ParseWebPage {
 
             Csv_Json stopCsv = new Csv_Json(nameStation, date, depth, name);
             System.out.println(stopCsv);
-            System.out.println("\n");
+            System.out.println(" \n");
 
         }
     }
