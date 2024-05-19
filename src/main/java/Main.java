@@ -7,13 +7,15 @@ public class Main {
 
         parseWebPage.getFilesJsonAndCSV(new File("data/"));
 
-        for (String jsonFilePath : parseWebPage.getJsonFilePaths()) {
+        /*for (String jsonFilePath : parseWebPage.getJsonFilePaths()) {
             parseWebPage.jsonToJava(new File(jsonFilePath));
         }
 
         for (String csvFilePath : parseWebPage.getCsvFilePaths()) {
             parseWebPage.csvToJava(new File(csvFilePath));
-        }
+        }*/
+
+        parseWebPage.get();
     }
 
 }
