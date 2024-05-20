@@ -15,7 +15,7 @@ public class Main {
             parseWebPage.csvToJava(new File(csvFilePath));
         }*/
 
-        parseWebPage.get();
+
     }
 
 }

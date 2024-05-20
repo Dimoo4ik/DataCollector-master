@@ -17,6 +17,9 @@ import java.util.List;
 public class ParseWebPage {
     private List<String> jsonFilePaths = new ArrayList<>();
     private List<String> csvFilePaths = new ArrayList<>();
+    private   List<Json> jsonn = new ArrayList<>();
+
+
     private Document document;
     private Elements elements;
 
@@ -78,8 +81,8 @@ public class ParseWebPage {
                 String json = Files.readString(currentFile.toPath());
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.registerModule(new JavaTimeModule());
-                List<Json> jsonObjects = objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, Json.class));
-                jsonObjects.forEach(System.out::println);
+                 jsonn = objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, Json.class));
+                //  jsonObjects.forEach(System.out::println);
 
             } else if (currentFile.getName().endsWith(".csv")) {
                 csvFilePaths.add(currentFile.getPath());
@@ -91,16 +94,34 @@ public class ParseWebPage {
                     String[] parts = line.split(",");
 
                     String nameStation = parts[0];
-                    String numberLine = parts[1];
 
-                    Stop_Csv stopCsv = new Stop_Csv(nameStation, numberLine);
+                    DateTimeFormatter ff = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+                    LocalDate date = LocalDate.parse(parts[1], ff);
 
-                    System.out.println(stopCsv);
 
+                    for (Json j : jsonn) {
+
+                        if (j.getStation_name().equals(nameStation)) {
+
+                            Csv_Json stopCsv = new Csv_Json(nameStation, date, j.getDepth());
+
+
+                            ObjectMapper objectMapper = new ObjectMapper();
+                            objectMapper.registerModule(new JavaTimeModule());
+
+                            String newJson = objectMapper.writeValueAsString(stopCsv);
+                            FileWriter fileWriter = new FileWriter("personNewJson.json");
+                            fileWriter.write(newJson);
+                            fileWriter.close();
+
+                            System.out.println(stopCsv);
+                        }
+                    }
                 }
             }
         }
     }
+    
 
     /*public void jsonToJava(File file) throws IOException {
         String json = Files.readString(file.toPath());
@@ -129,49 +150,10 @@ public class ParseWebPage {
         }
     }*/
 
-    public void get() throws IOException {
-
-        String pathJson = "";
-
-        for (String l : jsonFilePaths) {
-            pathJson = l;
-        }
-        String pathCsv = "";
-        for (String l : csvFilePaths) {
-            pathCsv = l;
-        }
-
-        String json = Files.readString(Paths.get(pathJson));
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        List<Json> jsonObjects = objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, Json.class));
+  
 
 
-        int size = 0;
-        for (Json j : jsonObjects) {
-            size++;
-            System.out.println(size);
-        }
-        List<String> lines = Files.readAllLines(Paths.get(pathCsv));
 
-        for (int i = 1; i < size; i++) {
-
-            String line = lines.get(i);
-            String[] parts = line.split(",");
-
-            String nameStation = parts[0];
-            DateTimeFormatter ff = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            LocalDate date = LocalDate.parse(parts[1], ff);
-
-            String depth = jsonObjects.get(i).getDepth();
-            String name = jsonObjects.get(i).getStation_name();
-
-            Csv_Json stopCsv = new Csv_Json(nameStation, date, depth, name);
-            System.out.println(stopCsv);
-            System.out.println(" \n");
-
-        }
-    }
 
  /*   public List<String> getJsonFilePaths() {
         return jsonFilePaths;
@@ -180,4 +162,6 @@ public class ParseWebPage {
     public List<String> getCsvFilePaths() {
         return csvFilePaths;
     }*/
+
+
 }

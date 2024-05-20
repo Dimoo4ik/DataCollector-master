@@ -3,14 +3,13 @@ import java.time.LocalDate;
 public class Csv_Json {
     private String station_name;
     private String depth;
-    private String name;
+
     private LocalDate date;
 
 
-    public Csv_Json(String station_name, LocalDate date, String depth, String name) {
+    public Csv_Json(String station_name, LocalDate date, String depth) {
         this.station_name = station_name;
         this.depth = depth;
-        this.name = name;
         this.date = date;
     }
 
@@ -30,13 +29,7 @@ public class Csv_Json {
         this.depth = depth;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public LocalDate getDate() {
         return date;
@@ -51,7 +44,6 @@ public class Csv_Json {
         return "Csv_Json{" +
                 "station_name='" + station_name + '\'' +
                 ", depth='" + depth + '\'' +
-                ", name='" + name + '\'' +
                 ", date=" + date +
                 '}';
     }
